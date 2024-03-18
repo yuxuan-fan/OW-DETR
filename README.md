@@ -8,14 +8,6 @@
 
 # Introduction
 
- Open-world object detection (OWOD) is a challenging computer vision problem, where the task is to detect a known set of object categories while simultaneously identifying unknown objects. Additionally, the model must incrementally learn new classes that become known in the next training episodes. Distinct from standard object detection, the OWOD setting poses significant challenges for generating quality candidate proposals on potentially unknown objects, separating the unknown objects from the background and detecting diverse unknown objects. Here, we introduce a novel end-to-end transformer-based  framework, OW-DETR, for open-world object detection. The proposed OW-DETR comprises three dedicated components namely, attention-driven pseudo-labeling, novelty classification and objectness scoring  to explicitly address the aforementioned OWOD challenges. Our OW-DETR explicitly encodes multi-scale contextual information, possesses less inductive bias, enables knowledge transfer from known classes to the unknown class and can better discriminate between unknown objects and background. Comprehensive experiments are performed on two benchmarks: MS-COCO and PASCAL VOC. The extensive ablations reveal the merits of our proposed contributions. Further, our model outperforms the recently introduced OWOD approach, ORE, with absolute gains ranging from  $1.8\%$ to $3.3\%$ in terms of unknown recall on MS-COCO. In the case of incremental object detection, OW-DETR outperforms the state-of-the-art for all settings on PASCAL VOC.
-<br>
-
-<p align="center" ><img width='350' src = "https://imgur.com/KXDXiAB.png"></p> 
-
-<br>
-
-<p align="center" ><img width='500' src = "https://imgur.com/cyeMXuh.png"></p> 
 
 
 
@@ -223,29 +215,3 @@ For reproducing any of the above mentioned results please run the `run_eval.sh` 
 
 **Note:**
 For more training and evaluation details please check the [Deformable DETR](https://github.com/fundamentalvision/Deformable-DETR) reposistory.
-
-# License
-
-This repository is released under the Apache 2.0 license as found in the [LICENSE](LICENSE) file.
-
-
-# Citation
-
-If you use OW-DETR, please consider citing:
-
-    @inproceedings{gupta2021ow,
-        title={OW-DETR: Open-world Detection Transformer}, 
-        author={Gupta, Akshita and Narayan, Sanath and Joseph, KJ and 
-        Khan, Salman and Khan, Fahad Shahbaz and Shah, Mubarak},
-        booktitle={CVPR},
-        year={2022}
-    }
-
-# Contact
-
-Should you have any question, please contact :e-mail: akshita.sem.iitr@gmail.com
-
-**Acknowledgments:**
-
-OW-DETR builds on previous works code base such as [Deformable DETR](https://github.com/fundamentalvision/Deformable-DETR), [Detreg](https://github.com/amirbar/DETReg), and [OWOD](https://github.com/JosephKJ/OWOD). If you found OW-DETR useful please consider citing these works as well.
-
