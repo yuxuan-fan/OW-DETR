@@ -73,6 +73,7 @@ python test.py
 The splits are present inside `data/VOC2007/OWOD/ImageSets/` folder. The remaining dataset can be downloaded using this [link](https://drive.google.com/drive/folders/1S5L-YmIiFMAKTs6nHMorB0Osz5iWI31k?usp=sharing)
 
 The files should be organized in the following structure:
+扯淡
 ```
 OW-DETR/
 └── data/
