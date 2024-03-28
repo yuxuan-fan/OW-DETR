@@ -40,7 +40,31 @@ python test.py
 
 
 # Dataset & Results
+下载coco数据集
+要分别下载coco数据集的训练集和验证集，然后将他们移动到JEPGImages文件夹下。
+```
+#下载coco数据集
+!wget http://images.cocodataset.org/zips/train2017.zip
+!wget http://images.cocodataset.org/zips/val2017.zip
+```
 
+解压移动
+由于train2017中的文件很多，所以我直接把train解压到目标目录下并改名成JEPGImages，然后把val2017解压后移动过去。
+
+```
+#解压到指定文件夹，然后改名
+!unzip /content/drive/MyDrive/train2017.zip -d /content/drive/MyDrive/OW-DETR/data/OWDETR/VOC2007
+!unzip /content/drive/MyDrive/val2017.zip -d /content/drive/MyDrive/OW-DETR/data/coco
+!mv /content/drive/MyDrive/OW-DETR/data/coco/val2017/*.jpg /content/drive/MyDrive/OW-DETR/data/OWDETR/VOC2007/JPEGImages/.
+```
+
+但是解压到云盘有一个很大的问题，由于文件很大，解压到云盘会很慢，因为云盘主要用途是用来存东西的，而不是用来跑代码的，所以我建议直接解压到/content目录下
+```
+#解压到指定文件夹，然后改名
+!unzip /content/drive/MyDrive/train2017.zip -d /content//OW-DETR/data/OWDETR/VOC2007
+!unzip /content/drive/MyDrive/val2017.zip -d /content//OW-DETR/data/coco
+!mv /content//OW-DETR/data/coco/val2017/*.jpg /content/OW-DETR/data/OWDETR/VOC2007/JPEGImages/.
+```
 ### OWOD proposed splits
 <br>
 <p align="center" ><img width='500' src = "https://imgur.com/9bzf3DV.png"></p> 
