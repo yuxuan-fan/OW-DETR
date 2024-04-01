@@ -27,6 +27,7 @@ pip install -r requirements.txt
 ```
 
 ### Backbone features
+权重文件
 
 Download the self-supervised backbone from [here](https://dl.fbaipublicfiles.com/dino/dino_resnet50_pretrain/dino_resnet50_pretrain.pth) and add in `models` folder.
 
@@ -34,10 +35,16 @@ Download the self-supervised backbone from [here](https://dl.fbaipublicfiles.com
 ```bash
 cd ./models/ops
 sh ./make.sh
+(这make脚本里就是执行setup)
+!python /content/drive/MyDrive/OW-DETR/models/ops/setup.py build install
+
+这一步可以解决ModuleNotFoundError: No module named 'MultiScaleDeformableAttention'这个报错。
+应该是指定路径下载多头注意力模块
+
 # unit test (should see all checking is True)
+# 不知道他在test什么，好像是测试和说明特定函数在不同精度和通道数下的前向计算和梯度计算的准确性。
 python test.py
 ```
-
 
 # Dataset & Results
 下载coco数据集
@@ -70,19 +77,41 @@ python test.py
 <p align="center" ><img width='500' src = "https://imgur.com/9bzf3DV.png"></p> 
 <br>
 
+"data/VOC2007/OWOD/ImageSets/" 文件夹中存在分割数据集的文件。这些分割通常指的是将一个数据集按照不同的用途划分为训练集、验证集和测试集等子集。
+
+可以使用特定链接下载其余的数据集
+
 The splits are present inside `data/VOC2007/OWOD/ImageSets/` folder. The remaining dataset can be downloaded using this [link](https://drive.google.com/drive/folders/1S5L-YmIiFMAKTs6nHMorB0Osz5iWI31k?usp=sharing)
 
 The files should be organized in the following structure:
+<<<<<<< Updated upstream
 扯淡
+=======
+
+>>>>>>> Stashed changes
 ```
+原作有误已修改
 OW-DETR/
 └── data/
-    └── VOC2007/
-        └── OWOD/
+    └── OWOD/
+        └── VOC2007/
         	├── JPEGImages
         	├── ImageSets
         	└── Annotations
 ```
+
+如果只是想看一下跑通的效果，可以直接下载作者给的OWOD的图片和标注，放在OWDETR中，也是可以跑通的。
+
+JEPGImages\
+Annotations\
+解压到/content目录下
+
+```
+!unzip /content/drive/MyDrive/Annotations -d /content/OW-DETR/data/OWDETR/VOC2007
+!unzip /content/drive/MyDrive/JEPGImages -d /content/OW-DETR/data/OWDETR/VOC2007
+```
+然后在ImageSets文件夹下新建一个Main文件夹，把本来ImageSets下的txt文件都移动到Main文件夹下，准备工作就完成了，之后就可以开始训练了。
+
 
 ### Results
 
@@ -128,7 +157,7 @@ OW-DETR/
 
 
 
-### Our proposed splits
+### OWDETR splits
 
 <br>
 <p align="center" ><img width='500' src = "https://imgur.com/RlqbheH.png"></p> 
@@ -136,13 +165,23 @@ OW-DETR/
 
 #### Dataset Preparation
 
-The splits are present inside `data/VOC2007/OWDETR/ImageSets/` folder.
+划分文件在VOC2007 JPEGIMAGES里
+
+The splits are present inside `data/OWDETR/VOC2007/JPEGImages/` folder.
 1. Make empty `JPEGImages` and `Annotations` directory.
 ```
-mkdir data/VOC2007/OWDETR/JPEGImages/
-mkdir data/VOC2007/OWDETR/Annotations/
+mkdir data/OWDETR/VOC2007/JPEGImages/
+mkdir data/OWDETR/VOC2007/Annotations/
 ```
 2. Download the COCO Images and Annotations from [coco dataset](https://cocodataset.org/#download).
+3. 分别下载coco数据集的训练集和验证集，然后将他们移动到JEPGImages文件夹下。
+```
+建议是直接下载到JPEG但是空间不一定够
+#下载coco数据集
+!wget http://images.cocodataset.org/zips/train2017.zip
+!wget http://images.cocodataset.org/zips/val2017.zip
+```
+
 3. Unzip train2017 and val2017 folder. The current directory structure should look like:
 ```
 OW-DETR/
@@ -152,7 +191,11 @@ OW-DETR/
         ├── train2017/
         └── val2017/
 ```
-4. Move all images from `train2017/` and `val2017/` to `JPEGImages` folder.
+
+4. Move all images from `train2017/` and `val2017/` to `/VOC2007/OWDETR/JPEGImages` folder.
+质疑，为什么不直接解压到/VOC2007/OWDETR/JPEGImages
+
+反正就是把train2017、val2017里面所有的.jpg都移动到data/VOC2007/OWDETR/JPEGImages/里面
 ```
 cd OW-DETR/data
 mv data/coco/train2017/*.jpg data/VOC2007/OWDETR/JPEGImages/.
@@ -160,17 +203,34 @@ mv data/coco/val2017/*.jpg data/VOC2007/OWDETR/JPEGImages/.
 ```
 5. Use the code `coco2voc.py` for converting json annotations to xml files.
 
+使用代码 coco2voc.py 将 json 注释转换为 xml 文件。
+
+先下载coco的annotation文件，然后解压
+
+注意下载到哪
+
+```commandline
+!wget http://images.cocodataset.org/annotations/annotations_trainval2017.zip
+!unzip /content/drive/MyDrive/annotations_trainval2017.zip -d /content/OW-DETR/data/coco/
+```
+然后coco2voc.py文件里写的是解压到data/OWDETR/VOC2007/Annotations（我改过，不一定对），小叶写的是
+    target_folder = '/content/drive/MyDrive/OW-DETR/data/OWDETR/VOC2007' 但是我感觉annotations文件夹就没用了
+
 The files should be organized in the following structure:
 ```
+原作有误已修改
 OW-DETR/
 └── data/
-    └── VOC2007/
-        └── OWDETR/
+    └── OWDETR/
+        └── VOC2007/
         	├── JPEGImages
         	├── ImageSets
         	└── Annotations
 ```
+还有一个问题，源码中使用了train.txt，但是作者没有给所有的train.txt，而是给了t1_train,t2_train,t3_train,t4_train
+</b>小叶在努力搞科研是把这段代码复制了四遍，然后把train.txt换成t1_train到t4_train，这样子最简单，并且要在ImageSets文件夹下新建一个Main文件夹，把本来ImageSets下的txt文件都移动到Main文件夹下，要不然下面训练也会报错。
 
+这里我先试一下把那四个txt合并为一个train.txt
 
 Currently, Dataloader and Evaluator followed for OW-DETR is in VOC format.
 

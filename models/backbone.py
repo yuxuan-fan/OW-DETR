@@ -1,11 +1,3 @@
-# ------------------------------------------------------------------------
-# OW-DETR: Open-world Detection Transformer
-# Akshita Gupta^, Sanath Narayan^, K J Joseph, Salman Khan, Fahad Shahbaz Khan, Mubarak Shah
-# https://arxiv.org/pdf/2112.01513.pdf
-# ------------------------------------------------------------------------
-# Modified from Deformable DETR (https://github.com/fundamentalvision/Deformable-DETR)
-# Copyright (c) 2020 SenseTime. All Rights Reserved.
-# ------------------------------------------------------------------------
 
 """
 Backbone modules.
@@ -118,7 +110,7 @@ class Backbone(BackboneBase):
             self.strides[-1] = self.strides[-1] // 2
 
 
-class Joiner(nn.Sequential):
+class Joiner(nn.Sequential):#这段代码定义了一个名为 Joiner 的类，它继承自 nn.Sequential，用于将骨干网络和位置编码模块连接在一起。
     def __init__(self, backbone, position_embedding):
         super().__init__(backbone, position_embedding)
         self.strides = backbone.strides

@@ -1,11 +1,3 @@
-# ------------------------------------------------------------------------
-# OW-DETR: Open-world Detection Transformer
-# Akshita Gupta^, Sanath Narayan^, K J Joseph, Salman Khan, Fahad Shahbaz Khan, Mubarak Shah
-# https://arxiv.org/pdf/2112.01513.pdf
-# ------------------------------------------------------------------------
-# Modified from Deformable DETR (https://github.com/fundamentalvision/Deformable-DETR)
-# Copyright (c) 2020 SenseTime. All Rights Reserved.
-# ------------------------------------------------------------------------
 
 import argparse
 import datetime
@@ -132,29 +124,29 @@ def get_args_parser():
     return parser
 
 def main(args):
-    utils.init_distributed_mode(args)
-    print("git:\n  {}\n".format(utils.get_sha()))
+    utils.init_distributed_mode(args)   #初始化分布式模式，根据传入的参数 args 设置分布式训练模式。
+    print("git:\n  {}\n".format(utils.get_sha()))#打印 Git 信息：通过调用 utils.get_sha() 函数获取当前代码的 Git 版本信息，并打印出来。
 
     if args.frozen_weights is not None:
         assert args.masks, "Frozen training is meant for segmentation only"
     print(args)
 
-    device = torch.device(args.device)
+    device = torch.device(args.device)#将设备设置为参数 args 中指定的设备，通常是 GPU 或 CPU。
 
-    # fix the seed for reproducibility
+    #为了保证结果的可复现性，将随机种子设置为参数 args 中指定的种子加上当前进程的排名（如果在分布式环境中运行）。
     seed = args.seed + utils.get_rank()
     torch.manual_seed(seed)
     np.random.seed(seed)
     random.seed(seed)
-
+    #调用 build_model(args) 函数构建模型，并返回模型、损失函数和后处理器。
     model, criterion, postprocessors = build_model(args)
     model.to(device)
-
+# 打印模型的信息，包括模型结构和可训练参数的数量。
     model_without_ddp = model
     print(model_without_ddp)
     n_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print('number of params:', n_parameters)
-
+#调用 get_datasets(args) 函数获取训练集和验证集。
     dataset_train, dataset_val = get_datasets(args)
     
     if args.distributed:

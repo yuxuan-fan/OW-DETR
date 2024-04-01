@@ -1,11 +1,4 @@
-# ------------------------------------------------------------------------
-# OW-DETR: Open-world Detection Transformer
-# Akshita Gupta^, Sanath Narayan^, K J Joseph, Salman Khan, Fahad Shahbaz Khan, Mubarak Shah
-# https://arxiv.org/pdf/2112.01513.pdf
-# ------------------------------------------------------------------------
-# Modified from Deformable DETR (https://github.com/fundamentalvision/Deformable-DETR)
-# Copyright (c) 2020 SenseTime. All Rights Reserved.
-# ------------------------------------------------------------------------
+
 
 from __future__ import absolute_import
 from __future__ import print_function
@@ -21,8 +14,12 @@ from functions.ms_deform_attn_func import MSDeformAttnFunction, ms_deform_attn_c
 
 N, M, D = 1, 2, 2
 Lq, L, P = 2, 2, 2
+#这行代码创建了一个张量 shapes，其中包含了两个形状为 (6, 4) 和 (3, 2) 的元组。
+# .cuda() 将张量移动到 GPU 上进行计算，并指定了数据类型为 torch.long。
 shapes = torch.as_tensor([(6, 4), (3, 2)], dtype=torch.long).cuda()
+
 level_start_index = torch.cat((shapes.new_zeros((1, )), shapes.prod(1).cumsum(0)[:-1]))
+
 S = sum([(H*W).item() for H, W in shapes])
 
 
@@ -36,9 +33,11 @@ def check_forward_equal_with_pytorch_double():
     attention_weights = torch.rand(N, Lq, M, L, P).cuda() + 1e-5
     attention_weights /= attention_weights.sum(-1, keepdim=True).sum(-2, keepdim=True)
     im2col_step = 2
+    # 在比较两个版本的注意力计算结果是否一致，并将结果存储在 fwdok 变量中。
     output_pytorch = ms_deform_attn_core_pytorch(value.double(), shapes, sampling_locations.double(), attention_weights.double()).detach().cpu()
     output_cuda = MSDeformAttnFunction.apply(value.double(), shapes, level_start_index, sampling_locations.double(), attention_weights.double(), im2col_step).detach().cpu()
     fwdok = torch.allclose(output_cuda, output_pytorch)
+
     max_abs_err = (output_cuda - output_pytorch).abs().max()
     max_rel_err = ((output_cuda - output_pytorch).abs() / output_pytorch.abs()).max()
 
@@ -73,7 +72,7 @@ def check_gradient_numerical(channels=4, grad_value=True, grad_sampling_loc=True
     value.requires_grad = grad_value
     sampling_locations.requires_grad = grad_sampling_loc
     attention_weights.requires_grad = grad_attn_weight
-
+    # gradcheck 函数是 PyTorch 中提供的一个用于检查函数的梯度计算是否正确的工具函数。它可以帮助验证自定义函数的梯度计算是否正确，并与数值梯度计算进行比较。
     gradok = gradcheck(func, (value.double(), shapes, level_start_index, sampling_locations.double(), attention_weights.double(), im2col_step))
 
     print(f'* {gradok} check_gradient_numerical(D={channels})')
