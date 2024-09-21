@@ -7,8 +7,7 @@
 # Installation
 
 ### Requirements
-
-We have trained and tested our models on `Ubuntu 16.0`, `CUDA 10.2`, `GCC 5.4`, `Python 3.7`
+ `Ubuntu 16.0`, `CUDA 10.2`, `GCC 5.4`, `Python 3.7`
 
 ```bash
 conda create -n owdetr python=3.7 pip
@@ -24,9 +23,11 @@ Download the self-supervised backbone from [here](https://dl.fbaipublicfiles.com
 
 ### Compiling CUDA operators
 ```bash
+这步检查意义不大
+
 cd ./models/ops
 sh ./make.sh
-(这make脚本里就是执行setup)
+(这make脚本里就是执行setup.py,这不神经病吗)
 !python /content/drive/MyDrive/OW-DETR/models/ops/setup.py build install
 
 这一步可以解决ModuleNotFoundError: No module named 'MultiScaleDeformableAttention'这个报错。
